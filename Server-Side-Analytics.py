@@ -1,6 +1,7 @@
 
 import sys
 from Access import Access
+from GoogleAnalyticsMeasurementProtocol import hit
 
 
 USAGE = "python Server-Side-Analytics.py [logfile] [hostname] [google analytics tracking id]"
@@ -10,7 +11,7 @@ def server_side_analytics(f, host: str, tracking_id: str):
     log = Access.from_file(f, host)
 
     for entry in log:
-        print(entry)
+        hit.hit_from_access(entry)
 
 
 if len(sys.argv) < 4:

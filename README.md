@@ -3,7 +3,7 @@ Here we will be building / integrating Google Analytics with KRMA Radio's Icecas
 
 ##Setup
 
-Requires Python 3.4.3 or above and no other libraries
+Requires Python 3.4.3 or above and Requests (`pip install Requests`)
 
 ##Run
 

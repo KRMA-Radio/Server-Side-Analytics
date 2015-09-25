@@ -1,12 +1,13 @@
 import json
+import time
 
 __author__ = 'Isaac'
 
 
 class Access:
-    def __init__(self, ip, time, http_method, host, page, response_code, http_referer, user_agent, length):
+    def __init__(self, ip, at: time.struct_time, http_method, host, page, response_code, http_referer, user_agent, length):
         self.ip = ip
-        self.time = time
+        self.time = at
         self.http_method = http_method
         self.host = host
         self.page = page
@@ -17,7 +18,7 @@ class Access:
 
     # We compare by the date at which the event took place
     def __cmp__(self, other):
-        return self.time.__comp__(other.time)
+        return time.mktime(self.time).__cmp__(time.mktime(other.time))
 
     def __str__(self):
         return json.dumps(self.__dict__)
@@ -64,7 +65,8 @@ class Access:
         user, passed = cls.parse_token(line, " ")
         line = line[passed:]
 
-        time, passed = cls.parse_token(line, "[", "]")
+        at, passed = cls.parse_token(line, "[", "]")
+        #at = time.strptime(at, "%d/%b/%Y:%H:%M:%S %Z")
         line = line[passed + 1:]
 
         # get the entire request looks something like:
@@ -85,6 +87,8 @@ class Access:
         line = line[passed:]
 
         http_referer, passed = cls.parse_token(line, '"')
+        if http_referer == '-':
+            http_referer = None
         line = line[passed+1:]
 
         user_agent, passed = cls.parse_token(line, '"')
@@ -93,7 +97,7 @@ class Access:
         length, passed = cls.parse_token(line, " ", "\n")
         length = int(length)
 
-        return Access(ip, time, http_method, host, page, response_code, http_referer, user_agent, length)
+        return Access(ip, at, http_method, host, page, response_code, http_referer, user_agent, length)
 
 
 
